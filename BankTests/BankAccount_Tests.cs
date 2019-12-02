@@ -29,7 +29,7 @@ namespace BankTests
             Assert.AreEqual(expected, actual, 0.001, "Account not debited correctly");
         }
         [TestMethod]
-        public void Debit_WhenAmountIsLessThanZero_shouldThrowArgumentOutOfRange()
+        public void Debit_WhenAmountIsLessThanZero_ShouldThrowArgumentOutOfRange()
         {
             //arrange
             double beginningBalance = 11.99;
@@ -39,10 +39,20 @@ namespace BankTests
             //act
 
             //assert
-            Assert.ThrowsException<System.ArgumentOutOfRangeException>(() => account.Debit(debitAmount));
+            //Assert.ThrowsException<System.ArgumentOutOfRangeException>(() => account.Debit(debitAmount));
+            try
+            {
+                account.Debit(debitAmount);
+            }
+            catch (System.ArgumentOutOfRangeException e)
+            {
+                //assert
+                StringAssert.Contains(e.Message, BankAccount.DebitAmountLessThanZeroMessage);
+
+            }
         }
         [TestMethod]
-        public void Debit_WhenAmountIsMoreThanZero_ShouldThrowArgumentOutOfRange()
+        public void Debit_WhenAmountIsMoreThanBalance_ShouldThrowArgumentOutOfRange()
         {
             //arrange
             double beginningBalance = 11.99;
@@ -50,7 +60,18 @@ namespace BankTests
             BankAccount account = new BankAccount("Mr. Bryan Walton", beginningBalance);
 
             //act & assert
-            Assert.ThrowsException<System.ArgumentOutOfRangeException>(() => account.Debit(debitAmount));
+            //Assert.ThrowsException<System.ArgumentOutOfRangeException>(() => account.Debit(debitAmount));
+            try
+            {
+                account.Debit(debitAmount);
+            }
+            catch (System.ArgumentOutOfRangeException e)
+            {
+                //assert
+                StringAssert.Contains(e.Message, BankAccount.DebitAmountExceedsBalanceMessage);
+
+            }
+            Assert.Fail("The expected exception was not thrown");
         }
     }
 }
